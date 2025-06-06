@@ -1,46 +1,44 @@
 export class I {
-    constructor(public readonly t: string, public readonly x: number) {}
+    constructor(public t: any, public x: any) {}
 
-    static fromText(text: string): I {
-        const split = text.split(" ");
-        return new I(split[0], parseInt(split[1]));
+    static toI(Any: any): I {
+        const split = Any.split(" ");
+        return new I(split[0], +split[1]);
     }
 }
 
 export class P {
-    constructor(public readonly hrz: number, public readonly dpt: number){}
+    constructor(public hrz: any, public dpt: any) {}
 
-    wHrz(nHrz: number): P {
+    wHrz(nHrz: any): P {
         return new P(nHrz, this.dpt);
     }
 
-    wDpt(nDpt: number): P {
+    wDpt(nDpt: any): P {
         return new P(this.hrz, nDpt);
     }
 }
 
 export class Sm {
-    private pstn: P;
-    private mvt: Map<string, Function> = new Map([
+    pstn: P;
+    mvt: any = new Map([
         ["down", (i: I) => this.pstn.wDpt(this.pstn.dpt + i.x)],
         ["up", (i: I) => this.pstn.wDpt(this.pstn.dpt - i.x)]
     ]);
 
-    constructor(hrz: number, dpt: number) {
+    constructor(hrz: any, dpt: any) {
         this.pstn = new P(hrz, dpt);
     }
 
-    private np(i: I): P {
+    np(i: I): P {
         if(this.mvt.has(i.t)) {
-            return this.mvt
-                .get(i.t)
-                ?.call(this, i);
+            return this.mvt.get(i.t).call(this, i);
         }
         return this.pstn.wHrz(this.pstn.hrz + i.x);
     }
 
     mv(i: Array<I>): void {
-        i.forEach(i => this.pstn = this.np(i));
+        i.forEach(i => { this.pstn = this.np(i); });
     }
 
     cp(): P {
