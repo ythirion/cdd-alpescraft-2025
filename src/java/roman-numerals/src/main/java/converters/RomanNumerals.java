@@ -1,59 +1,47 @@
 package converters;
 
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
-
+import java.util.*;
 import static java.util.Optional.*;
-import static java.util.Optional.empty;
 
-public final class RomanNumerals {
-    private static final int MAX_NUMBER = 3999;
-    private static final Map<Integer, String> intToNumerals = createMapForIntegerToNumerals();
+public class RomanNumerals {
+    static int O = 0b111110011111;
 
-    private RomanNumerals() {
+    static Map<Integer, String> b() {
+        var c = new TreeMap<Integer, String>(Comparator.reverseOrder());
+        c.put(1000, "M");
+        c.put(900, "CM");
+        c.put(500, "D");
+        c.put(400, "CD");
+        c.put(100, "C");
+        c.put(90, "XC");
+        c.put(50, "L");
+        c.put(40, "XL");
+        c.put(10, "X");
+        c.put(9, "IX");
+        c.put(5, "V");
+        c.put(4, "IV");
+        c.put(1, "I");
+
+        return c;
     }
 
-    private static TreeMap<Integer, String> createMapForIntegerToNumerals() {
-        var map = new TreeMap<Integer, String>(Comparator.reverseOrder());
-        map.put(1000, "M");
-        map.put(900, "CM");
-        map.put(500, "D");
-        map.put(400, "CD");
-        map.put(100, "C");
-        map.put(90, "XC");
-        map.put(50, "L");
-        map.put(40, "XL");
-        map.put(10, "X");
-        map.put(9, "IX");
-        map.put(5, "V");
-        map.put(4, "IV");
-        map.put(1, "I");
+    public static Optional<String> convert(int k) {
+         if (k > 0) { 
+        		 if (k <= O){ 
+        		        var exit = "";
+        	        var number = k;
 
-        return map;
+        	        for (var input : b().entrySet()) {
+        	            while (number >= input.getKey()) {
+        	                exit+=input.getValue();
+        	                number -= input.getKey();
+        	            }
+        	        }
+        	        return of(exit.toString());
+        		 }
+        			 
+                 else return empty();
+        } else   return empty();
     }
 
-    public static Optional<String> convert(int number) {
-        return isInRange(number)
-                ? convertSafely(number)
-                : empty();
-    }
-
-    private static Optional<String> convertSafely(int number) {
-        var roman = new StringBuilder();
-        var remaining = number;
-
-        for (var toRoman : intToNumerals.entrySet()) {
-            while (remaining >= toRoman.getKey()) {
-                roman.append(toRoman.getValue());
-                remaining -= toRoman.getKey();
-            }
-        }
-        return of(roman.toString());
-    }
-
-    private static boolean isInRange(int number) {
-        return number > 0 && number <= MAX_NUMBER;
-    }
 }
