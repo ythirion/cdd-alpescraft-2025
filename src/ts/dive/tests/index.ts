@@ -1,13 +1,13 @@
 import * as fs from 'fs';
-import { Instruction } from '../src/Instruction';
-import { Submarine } from '../src/Submarine';
+import { I } from '../src/main';
+import { Sm } from '../src/main';
 
-export function loadInstructions(): Array<Instruction> {
+export function loadInstructions(): Array<I> {
     return fs.readFileSync('./tests/submarine.txt', 'utf-8')
         .split(/\r?\n/)
-        .map(line => Instruction.fromText(line));
+        .map(line => I.fromText(line));
 }
 
-export function calculateResult(submarine: Submarine): number {
-    return submarine.currentPosition().depth * submarine.currentPosition().horizontal;
+export function calculateResult(submarine: Sm): number {
+    return submarine.cp().dpt * submarine.cp().hrz;
 }
